@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,12 +23,12 @@ class DbHelper {
   //buat tabel baru dengan nama item
   void _createDb(Database db, int version) async {
     await db.execute('''
- CREATE TABLE item (
- id INTEGER PRIMARY KEY AUTOINCREMENT,
- name TEXT,
- price INTEGER
- )
- ''');
+      CREATE TABLE item (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      price INTEGER
+      )
+      ''');
   }
 
   //select databases

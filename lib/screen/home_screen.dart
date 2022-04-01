@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'dart:async';
 import '../dbhelper.dart';
 import '../model/item.dart';
-import 'entry_form_screen.dart';
+import 'screen.dart';
 
 //pendukung program asinkron
 class Home extends StatefulWidget {
@@ -14,9 +13,10 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   DbHelper dbHelper = DbHelper();
   int count = 0;
-  late List<Item> itemList;
+  List<Item>? itemList;
   @override
   Widget build(BuildContext context) {
+    updateListView();
     if (itemList == null) {
       itemList = <Item>[];
     }
@@ -35,7 +35,7 @@ class HomeState extends State<Home> {
             child: RaisedButton(
               child: Text("Tambah Item"),
               onPressed: () async {
-                var item = await navigateToEntryForm(context, null?.item);
+                var item = await navigateToEntryForm(context, null);
                 if (item != null) {
                   //TODO 2 Panggil Fungsi untuk Insert ke DB
                   int result = await dbHelper.insert(item);
@@ -51,12 +51,12 @@ class HomeState extends State<Home> {
     );
   }
 
-  Future<Item> navigateToEntryForm(BuildContext context, Item item) async {
+  Future<Item?> navigateToEntryForm(BuildContext context, Item? item) async {
     var result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return EntryForm(item);
+          return EntryForm(item!);
         },
       ),
     );
@@ -77,10 +77,10 @@ class HomeState extends State<Home> {
               child: Icon(Icons.ad_units),
             ),
             title: Text(
-              this.itemList[index].name,
+              this.itemList![index].name,
               style: textStyle,
             ),
-            subtitle: Text(this.itemList[index].price.toString()),
+            subtitle: Text(this.itemList![index].price.toString()),
             trailing: GestureDetector(
               child: Icon(Icons.delete),
               onTap: () async {
@@ -89,7 +89,7 @@ class HomeState extends State<Home> {
             ),
             onTap: () async {
               var item =
-                  await navigateToEntryForm(context, this.itemList[index]);
+                  await navigateToEntryForm(context, this.itemList![index]);
               //TODO 4 Panggil Fungsi untuk Edit data
             },
           ),
